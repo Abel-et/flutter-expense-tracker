@@ -19,9 +19,11 @@ class TransactionRepositoryImpl implements TransactionRepository {
 
       final transactions = models
           .map((model) => model.toEntity())
-          .toList();
+          .toList() ;
 
-      return Right(transactions);
+      final reversed = transactions.reversed;
+
+      return Right(reversed.toList());
     } catch (e) {
       return Left(
         CacheFailure(message: e.toString()),
@@ -40,6 +42,33 @@ class TransactionRepositoryImpl implements TransactionRepository {
       return Left(
         CacheFailure(message: e.toString()),
       );
+    }
+  }
+
+  @override 
+  Future<Either<Failure,double>> netWroth() async{
+
+    try {
+    final allTransactions = await localDataSource.getAllTransaction();
+    // change all transactions into entity 
+    final transactions = allTransactions
+    .map((model) => model.toEntity())
+    .toList();
+
+    // put a total variable to get the total net worth
+    late double total = 0.0;
+
+    for(var transaction in transactions){
+      if (transaction.type == 'expense'){
+        total -= transaction.amount;
+      }else{
+        total += transaction.amount;
+      }
+    }
+    return Right(total);}
+    catch(e){
+      return Left(CacheFailure(
+        message: e.toString()));
     }
   }
 

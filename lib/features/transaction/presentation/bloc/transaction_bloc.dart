@@ -1,4 +1,4 @@
-import 'package:expense_tracker/features/transaction/domain/usecase/transaction_use_case.dart';
+import 'package:expense_tracker/features/transaction/domain/useCase/transaction_use_case.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'transaction_event.dart';
@@ -6,11 +6,14 @@ import 'transaction_state.dart';
 
 class TransactionBloc
     extends Bloc<TransactionEvent, TransactionState> {
+
+      // action that a user can perform 
   final GetTransactionUseCase getTransactionUseCase;
   final GetAllTransactionUseCase getAllTransactionUseCase;
   final CreateTransactionUseCase createTransactionUseCase;
   final UpdateTransactionUseCase updateTransactionUseCase;
   final DeleteTransactionUseCase deleteTransactionUseCase;
+ 
 
   TransactionBloc({
     required this.getAllTransactionUseCase,
@@ -18,6 +21,7 @@ class TransactionBloc
     required this.createTransactionUseCase,
     required this.updateTransactionUseCase,
     required this.deleteTransactionUseCase,
+    
   }) : super(TransactionInitial()) {
     on<GetAllTransactionEvent>(_onGetAll);
     on<GetTransactionEvent>(_onGetTransaction);
@@ -25,8 +29,11 @@ class TransactionBloc
     on<AddExpenseEvent>(_onAddExpense);
     on<UpdateTransactionEvent>(_onUpdate);
     on<DeleteTransactionEvent>(_onDelete);
+   
   }
 
+  
+  
   Future<void> _onGetAll(
     GetAllTransactionEvent event,
     Emitter<TransactionState> emit,
@@ -211,4 +218,37 @@ Future<void> _onAddIncome(
       },
     );
   }
+}
+
+
+class NetWrothBloc extends Bloc< NetWorthEvent, NetWorthState> {
+  final GetNetWorthUseCase getNetWorthUseCase;
+
+  NetWrothBloc({
+    required this.getNetWorthUseCase
+  }): super(NetWorthInitial()){
+    on<GetNetWorthEvent>(_onNetWorth);
+  }
+
+
+  Future<void> _onNetWorth( 
+    GetNetWorthEvent event,
+    Emitter<NetWorthState> emit) async{
+      emit(NetWorthLoading());
+      final result = await getNetWorthUseCase();
+
+      result.fold( 
+        (failure){
+
+          emit(NetWorthFailure(failure.massage));
+        },
+        (totalWorth){
+          emit(
+            NetWorthLoaded(totalWorth),
+           
+          );
+         
+        }
+      );
+    }
 }

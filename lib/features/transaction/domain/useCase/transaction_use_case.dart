@@ -60,3 +60,14 @@ class DeleteTransactionUseCase{
     return await repository.deleteTransaction(id);
   }
 }
+
+
+class GetNetWorthUseCase{
+  final TransactionRepository repository;
+
+  GetNetWorthUseCase( this.repository);
+
+  Future<Either<Failure, double>> call() {
+    return repository.netWroth();
+  }
+}

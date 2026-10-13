@@ -19,4 +19,6 @@ Future<Either<Failure, TransactionEntity>> getTransaction(int id);
 // Delete Transaction 
 Future<Either<Failure, void>> deleteTransaction(int id);
 
+// netWorth or total remaining money
+Future<Either<Failure, double>> netWroth();
 }

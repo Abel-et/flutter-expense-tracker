@@ -1,6 +1,23 @@
 import 'package:expense_tracker/features/transaction/domain/entities/transaction_entity.dart';
 
 abstract class  TransactionState {}
+abstract class NetWorthState{}
+class NetWorthLoading extends NetWorthState{}
+class NetWorthInitial extends NetWorthState{}
+class NetWorthLoaded extends NetWorthState{
+  final double total ;
+  NetWorthLoaded(this.total);
+}
+class NetWorthFailure extends NetWorthState{
+  final String errorMessage;
+  NetWorthFailure( this.errorMessage);
+}
+
+class NetWorthSuccessAction extends NetWorthState{
+  final String successMessage;
+  NetWorthSuccessAction(this.successMessage);
+}
+
 
 class TransactionInitial extends TransactionState{}
 
